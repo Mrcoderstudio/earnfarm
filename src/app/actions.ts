@@ -136,9 +136,10 @@ export async function buyAsset(assetId: AssetId): Promise<BuyResult> {
       .update(users)
       .set({
         coins: sql`${users.coins} - ${price}`,
+        // YAHAN FIX KIYA HAI: jsonb_set ke liye path ko raw SQL string bana kar bheja hai
         assets: sql`jsonb_set(
           ${users.assets},
-          ${JSON.stringify([id])}::text[],
+          ${sql.raw(`'{${id}}'::text[]`)},
           to_jsonb(coalesce((${users.assets} ->> ${id})::int, 0) + 1),
           true
         )`,
