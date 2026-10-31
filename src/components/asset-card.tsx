@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { buyAsset, type WalletSnapshot } from "@/app/actions";
+import { buyAsset } from "@/app/actions";
+import type { WalletSnapshot } from "@/lib/snapshot"; // <--- YAHAN FIX KIYA HAI
 import type { AssetId } from "@/db/schema";
 import type { AssetMeta } from "@/lib/assets";
 import { formatCoins } from "@/lib/format";

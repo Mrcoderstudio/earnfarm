@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { claimYield, type WalletSnapshot } from "@/app/actions";
+import { claimYield } from "@/app/actions";
+import type { WalletSnapshot } from "@/lib/snapshot"; // <--- YAHAN FIX KIYA HAI
 import { ASSET_LIST } from "@/lib/assets";
 import { formatCoins, formatUsd } from "@/lib/format";
 import { setWalletSnapshot, useWallet } from "@/lib/wallet-store";
@@ -413,5 +414,3 @@ function StatusPill({ status }: { status: string }) {
   const tone = status === "Approved" ? "neon" : status === "Rejected" ? "danger" : "gold";
   return <Badge tone={tone as "neon" | "danger" | "gold"}>{status}</Badge>;
 }
-
-
