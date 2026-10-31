@@ -12,6 +12,8 @@ import { pushToast } from "./toast";
 
 const AD_SECONDS = 10;
 const TICK_MS = 100;
+// Aapka Adsterra Smartlink yahan hai
+const ADSTERRA_LINK = "https://asiafilm.org/4/0c5d0487671cad28610cb5108e9d7321";
 
 type Phase = "ready" | "playing" | "rewarded";
 
@@ -56,6 +58,10 @@ export function AdPlayer({
 
   const start = useCallback(() => {
     if (lock || phase !== "ready") return;
+
+    // ASLI AD YAHAN KHULEGI (Naye Tab Mein)
+    window.open(ADSTERRA_LINK, "_blank");
+
     setError(null);
     setPayout(null);
     setRemaining(AD_SECONDS * 1000);
@@ -107,7 +113,6 @@ export function AdPlayer({
       <Card className="relative overflow-hidden">
         {/* ── 16:9 creative slot ─────────────────────── */}
         <div className="relative aspect-video w-full overflow-hidden bg-[#070d1e]">
-          {/* INTEGRATION: PASTE ADSTERRA/MONETAG SCRIPT HERE FOR PRODUCTION */}
           <div className="absolute inset-0">
             <AnimatePresence mode="wait">
               {phase === "playing" ? (
@@ -132,11 +137,10 @@ export function AdPlayer({
                       transition={{ duration: 1.8, repeat: Infinity }}
                       className="display text-2xl font-bold text-ice sm:text-4xl"
                     >
-                      Your ad could be here
+                      Ad is playing in a new tab
                     </motion.p>
                     <p className="max-w-sm text-xs leading-relaxed text-mist">
-                      Network SDK creative · the reward is granted by the server only after the full{" "}
-                      {AD_SECONDS}s playthrough.
+                      Please keep the ad tab open. Your reward will be credited automatically after the timer ends.
                     </p>
                     <div className="flex w-52 items-end gap-1">
                       {Array.from({ length: 22 }).map((_, index) => (
