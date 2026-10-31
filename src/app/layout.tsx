@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script"; // <--- Naya import
 import "./globals.css";
 
 const TITLE = "EarnFarm — Play, Grow & Earn";
@@ -30,7 +31,17 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="antialiased">
-      <body>{children}</body>
+      <body>
+        {children}
+
+        {/* MONETAG MULTITAG SCRIPT YAHAN LAGA HAI */}
+        <Script
+          src="https://quge5.com/88/tag.min.js"
+          data-zone="303999"
+          data-cfasync="false"
+          strategy="afterInteractive"
+        />
+      </body>
     </html>
   );
 }
