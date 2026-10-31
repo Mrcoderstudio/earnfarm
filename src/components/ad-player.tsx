@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { rewardAd, type WalletSnapshot } from "@/app/actions";
+import { rewardAd } from "@/app/actions";
+import type { WalletSnapshot } from "@/lib/snapshot";
 import { formatCoins } from "@/lib/format";
 import { setWalletSnapshot } from "@/lib/wallet-store";
 import { AlertIcon, BoltIcon, CheckIcon, ClockIcon, CoinIcon, GiftIcon, PlayIcon } from "./icons";
