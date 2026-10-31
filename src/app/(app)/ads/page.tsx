@@ -4,7 +4,7 @@ import { formatCoins } from "@/lib/format";
 import { buildSnapshot } from "@/lib/snapshot";
 import { requireUser } from "@/lib/session";
 import { AdPlayer } from "@/components/ad-player";
-import { Badge, Card, SectionTitle } from "@/components/ui";
+import { Badge, Card } from "@/components/ui"; // SectionTitle hata diya hai
 import { AlertIcon, CoinIcon, GiftIcon, PlayIcon, ShieldIcon } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
@@ -101,37 +101,6 @@ export default async function AdsPage() {
             </ul>
           </Card>
         </div>
-      </div>
-
-      <div>
-        <SectionTitle eyebrow="Placement" title="SDK integration zone" />
-        <Card className="relative overflow-hidden border-dashed p-6">
-          <div className="pointer-events-none absolute inset-0 opacity-[0.07]">
-            <div className="hair-grid absolute inset-0" />
-          </div>
-          <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm font-semibold text-ice">
-                Adsterra / Monetag rewarded-video container
-              </p>
-              <p className="mt-1 max-w-2xl text-xs leading-relaxed text-mist">
-                The player above is the reward orchestration layer: it owns the timer, the server-side
-                verification and the wallet write. Drop your network&apos;s rewarded-video script into the
-                creative slot in{" "}
-                <code className="rounded-md border border-line/70 bg-deep-2 px-1.5 py-0.5 text-[11px] text-neon">
-                  src/components/ad-player.tsx
-                </code>{" "}
-                and fire the network&apos;s completion callback instead of the local timer. Nothing else
-                has to change — <span className="text-ice">rewardAd()</span> already handles cap, credit
-                and referral commission.
-              </p>
-            </div>
-            <Badge tone="neon">
-              <span className="size-1.5 rounded-full bg-neon" />
-              server-verified rewards
-            </Badge>
-          </div>
-        </Card>
       </div>
     </div>
   );
