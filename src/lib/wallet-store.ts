@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import type { WalletSnapshot } from "@/app/actions";
+import type { WalletSnapshot } from "@/lib/snapshot";
 
 let current: WalletSnapshot | null = null;
 const listeners = new Set<() => void>();

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { AnimatePresence, motion } from "framer-motion";
-import type { WalletSnapshot } from "@/app/actions";
+import type { WalletSnapshot } from "@/lib/snapshot";
 import { refreshWallet } from "@/app/actions";
 import { formatCoins, formatUsd } from "@/lib/format";
 import { useWallet, setWalletSnapshot } from "@/lib/wallet-store";
