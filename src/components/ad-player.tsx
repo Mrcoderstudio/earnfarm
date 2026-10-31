@@ -6,7 +6,7 @@ import { rewardAd } from "@/app/actions";
 import type { WalletSnapshot } from "@/lib/snapshot";
 import { formatCoins } from "@/lib/format";
 import { setWalletSnapshot } from "@/lib/wallet-store";
-import { AlertIcon, BoltIcon, CheckIcon, ClockIcon, CoinIcon, GiftIcon, PlayIcon } from "./icons";
+import { AlertIcon, BoltIcon, CheckIcon, ClockIcon, CoinIcon, PlayIcon } from "./icons";
 import { Badge, Button, Card, Meter } from "./ui";
 import { pushToast } from "./toast";
 
@@ -21,8 +21,7 @@ export function AdPlayer({
   snapshot,
   adRewardCoins,
   dailyAdCap,
-  referralSharePercent,
-  hasReferrer,
+  hasReferrer, // Isko rehne dein, error na aaye isliye
 }: {
   snapshot: WalletSnapshot;
   adRewardCoins: number;
@@ -33,25 +32,27 @@ export function AdPlayer({
   const [phase, setPhase] = useState<Phase>("ready");
   const [remaining, setRemaining] = useState(AD_SECONDS * 1000);
   const [error, setError] = useState<string | null>(null);
-  const [payout, setPayout] = useState<{ reward: number; bonus: number; name: string | null } | null>(null);
   const startedAt = useRef<number>(0);
   const claimInFlight = useRef(false);
 
   const lock = snapshot.adCapRemaining <= 0;
 
+  // Naya Timer Logic: Tab background mein jane par bhi sahi chalega
   useEffect(() => {
     if (phase !== "playing") return;
+
     const id = setInterval(() => {
-      setRemaining((value) => {
-        const next = value - TICK_MS;
-        if (next <= 0) {
-          clearInterval(id);
-          void finish();
-          return 0;
-        }
-        return next;
-      });
+      const elapsed = Date.now() - startedAt.current;
+      const left = Math.max(0, (AD_SECONDS * 1000) - elapsed);
+
+      setRemaining(left);
+
+      if (left <= 0) {
+        clearInterval(id);
+        void finish();
+      }
     }, TICK_MS);
+
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
@@ -59,14 +60,17 @@ export function AdPlayer({
   const start = useCallback(() => {
     if (lock || phase !== "ready") return;
 
-    // ASLI AD YAHAN KHULEGI (Naye Tab Mein)
-    window.open(ADSTERRA_LINK, "_blank");
-
+    // Pehle timer shuru karein
     setError(null);
-    setPayout(null);
     setRemaining(AD_SECONDS * 1000);
     startedAt.current = Date.now();
     setPhase("playing");
+
+    // Phir ad kholen (100ms baad taake UI update ho jaye)
+    setTimeout(() => {
+      window.open(ADSTERRA_LINK, "_blank");
+    }, 100);
+
   }, [lock, phase]);
 
   const finish = useCallback(async () => {
@@ -74,8 +78,8 @@ export function AdPlayer({
     claimInFlight.current = true;
     const elapsed = Date.now() - startedAt.current;
 
-    // Hard client guard — the server action remains the source of truth.
-    if (elapsed < AD_SECONDS * 1000 - 400) {
+    // Security check: Kam az kam 9.5 second poore hone chahiye
+    if (elapsed < AD_SECONDS * 1000 - 500) {
       claimInFlight.current = false;
       setError("Ad was skipped — it must play to completion.");
       setPhase("ready");
@@ -87,15 +91,11 @@ export function AdPlayer({
 
     if (result.ok) {
       setWalletSnapshot(result.snapshot);
-      setPayout({ reward: result.reward, bonus: result.referrerBonus, name: result.referrerName });
       setPhase("rewarded");
       pushToast({
         tone: "reward",
         title: `+${formatCoins(result.reward)} coins credited`,
-        body:
-          result.referrerBonus > 0
-            ? `${formatCoins(result.referrerBonus)} coins sent to ${result.referrerName} as referral commission.`
-            : `Written to your Postgres wallet · ${result.remainingToday} ads left today.`,
+        body: `Written to your wallet · ${result.remainingToday} ads left today.`,
       });
       setTimeout(() => setPhase("ready"), 2200);
     } else {
@@ -178,18 +178,12 @@ export function AdPlayer({
                     <CoinIcon className="size-8" />
                   </motion.span>
                   <p className="num text-3xl font-bold text-ice sm:text-4xl">
-                    +{formatCoins(payout?.reward ?? adRewardCoins)}
+                    +{formatCoins(adRewardCoins)}
                   </p>
                   <p className="flex items-center gap-1.5 text-xs font-semibold text-neon">
                     <CheckIcon className="size-4" />
                     credited to your wallet
                   </p>
-                  {payout && payout.bonus > 0 ? (
-                    <p className="flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/[0.07] px-3 py-1.5 text-[11px] font-semibold text-gold">
-                      <GiftIcon className="size-3.5" />
-                      +{formatCoins(payout.bonus)} to {payout.name ?? "your referrer"} ({referralSharePercent}%)
-                    </p>
-                  ) : null}
                 </motion.div>
               ) : (
                 <motion.div
@@ -244,9 +238,7 @@ export function AdPlayer({
               <ClockIcon className="size-3.5" />
               {lock
                 ? "Reward counter resets automatically on the next request after midnight."
-                : `Next reward: ${formatCoins(adRewardCoins)} coins · ${
-                    hasReferrer ? `referrer earns ${formatCoins(Math.floor((adRewardCoins * referralSharePercent) / 100))}` : "no referrer linked"
-                  }`}
+                : `Next reward: ${formatCoins(adRewardCoins)} coins`}
             </p>
           </div>
 
