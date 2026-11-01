@@ -24,15 +24,16 @@ import {
   WalletIcon,
 } from "./icons";
 
+// Yahan "Earn More" (Tasks) add kar diya gaya hai
 const NAV = [
   { href: "/dashboard", label: "Home", short: "Home", icon: HomeIcon },
   { href: "/store", label: "Store", short: "Store", icon: StoreIcon },
   { href: "/ads", label: "Watch Ads", short: "Ads", icon: PlayIcon },
+  { href: "/tasks", label: "Earn More", short: "Tasks", icon: GiftIcon }, // <--- Naya Tab
   { href: "/profile", label: "Profile", short: "Profile", icon: UserIcon },
 ] as const;
 
 const EXTRA = [{ href: "/withdraw", label: "Payouts", icon: WalletIcon }] as const;
-
 
 
 export function AppShell({
@@ -307,6 +308,7 @@ export function Avatar({ name, small = false }: { name: string; small?: boolean 
 function labelFor(pathname: string): string {
   if (pathname.startsWith("/store")) return "Asset store";
   if (pathname.startsWith("/ads")) return "Ad network";
+  if (pathname.startsWith("/tasks")) return "Earn More"; // <--- Naya Label
   if (pathname.startsWith("/withdraw")) return "Payout desk";
   if (pathname.startsWith("/profile")) return "Farmer profile";
   if (pathname.startsWith("/admin")) return "Operator console";
