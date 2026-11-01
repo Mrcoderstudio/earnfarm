@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script"; // <--- Naya import
+import Script from "next/script"; // <--- Yeh import zaroori hai
 import "./globals.css";
 
 const TITLE = "EarnFarm — Play, Grow & Earn";
@@ -34,13 +34,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
 
-        {/* MONETAG MULTITAG SCRIPT YAHAN LAGA HAI */}
+        {/* 1. Push Notifications Script */}
         <Script
-          src="https://quge5.com/88/tag.min.js"
-          data-zone="303999"
+          src="https://5gvci.com/act/files/tag.min.js?z=12164742"
           data-cfasync="false"
           strategy="afterInteractive"
         />
+
+        {/* 2. In-Page Push (Banner) Script */}
+        <Script id="monetag-inpage-push" strategy="afterInteractive">
+          {`(function(s){s.dataset.zone='12164741',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`}
+        </Script>
       </body>
     </html>
   );
